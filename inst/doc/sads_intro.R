@@ -23,7 +23,7 @@ library(sads)
 ### code chunk number 4: install-dev-version (eval = FALSE)
 ###################################################
 ## library(devtools)
-## install_github(repo = 'piklprado/sads', ref= 'dev')
+## install_github(repo = 'piLaboratory/sads', ref= 'dev')
 
 
 ###################################################
