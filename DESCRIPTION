@@ -1,8 +1,8 @@
 Package: sads
 Type: Package
 Title: Maximum Likelihood Models for Species Abundance Distributions
-Version: 0.2.3
-Date: 2015-09-24
+Version: 0.2.4
+Date: 2015-11-02
 Author: Paulo I. Prado, Murilo Dantas Miranda and Andre Chalom
 Maintainer: Paulo I. Prado <prado@ib.usp.br>
 Depends: stats, bbmle
@@ -17,6 +17,6 @@ URL: http://piLaboratory.github.io/sads,
         https://github.com/piklprado/sads
 BugReports: https://github.com/piLaboratory/sads/issues
 NeedsCompilation: yes
-Packaged: 2015-09-24 16:38:41 UTC; chalom
+Packaged: 2015-11-03 00:43:05 UTC; chalom
 Repository: CRAN
-Date/Publication: 2015-09-25 00:56:54
+Date/Publication: 2015-11-03 10:53:49
