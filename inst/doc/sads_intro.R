@@ -96,7 +96,8 @@ AIC(moths.ls)
 ### code chunk number 15: Profiling and intervals
 ###################################################
 moths.ls.prf <- profile(moths.ls)
-confint(moths.ls.prf) # conf intervals
+likelregions(moths.ls.prf) #likelihood intervals
+confint(moths.ls.prf)
 
 
 ###################################################
@@ -173,15 +174,16 @@ legend("topright",
 ### code chunk number 24: rsad-example1
 ###################################################
 set.seed(42)# fix random seed to make example reproducible
-(samp1 <- rsad(S = 10, frac = 0.1, sad = "lnorm", zeroes=TRUE,
-               ssize = 2, meanlog = 3, sdlog = 1.5))
+(samp1 <- rsad(S = 10, frac = 0.1, sad = "lnorm", 
+               coef=list(meanlog = 3, sdlog = 1.5),
+               zeroes=TRUE, ssize = 2))
 
 
 ###################################################
 ### code chunk number 25: rsad-example2
 ###################################################
 (samp2 <- rsad(S = 100, frac=0.1, sad="lnorm", 
-              meanlog=5, sdlog=2))
+               list(meanlog=5, sdlog=2)))
 
 
 ###################################################
@@ -198,7 +200,7 @@ coef(samp2.pl)[1] - log(0.1)
 results <- matrix(nrow=75,ncol=2)
 for(i in 1:75){
     x <- rsad(S = 100, frac=0.1, sad="lnorm", 
-              meanlog=5, sdlog=2)
+              list(meanlog=5, sdlog=2))
     y <- fitsad(x, "poilog")
     results[i,] <- coef(y)
 }
@@ -227,9 +229,9 @@ apply(results,2,sd)/apply(results,2,mean)
 ### code chunk number 30: rsads-bias-plots
 ###################################################
 par(mfrow=c(1,2))
-plot(density(results[,1]))
+plot(density(results[,1]), main=expression(paste("Density of ",mu)))
 abline(v=c(mean(results[,1]),5), col=2:3)
-plot(density(results[,2]))
+plot(density(results[,2]), main=expression(paste("Density of ",sigma)))
 abline(v=c(mean(results[,2]), 2), col=2:3)
 par(mfrow=c(1,1))
 
