@@ -35,8 +35,9 @@ library(sads)
 ###################################################
 ### code chunk number 6: Loading datasets
 ###################################################
-data(moths)# William's moth data
+data(moths)# William's moth data used by Fisher et al (1943)
 data(ARN82.eB.apr77)# Arntz et al. benthos data
+data(birds)# Bird census used by Preston (1948)
 
 
 ###################################################
@@ -59,32 +60,50 @@ plot(arn.oc)
 
 
 ###################################################
-### code chunk number 10: Rank-abundance tables
+### code chunk number 10: octaves-relative-frequencies
+###################################################
+plot(moths.oc, prop = TRUE, border=NA, col=NA)
+lines(octav(birds), mid = FALSE, prop = TRUE, col="red")
+lines(octav(moths), mid = FALSE, prop = TRUE)
+legend("topright", c("Preston's birds", "Fisher's moths"), col=c("red", "blue"), lty=1, bty="n")
+
+
+###################################################
+### code chunk number 11: Rank-abundance tables
 ###################################################
 head(moths.rad <- rad(moths))
 head(arn.rad <- rad(ARN82.eB.apr77))
 
 
 ###################################################
-### code chunk number 11: radplot1
+### code chunk number 12: radplot1
 ###################################################
 plot(moths.rad, ylab="Number of individuals")
 
 
 ###################################################
-### code chunk number 12: radplots
+### code chunk number 13: radplots
 ###################################################
 plot(arn.rad, ylab="Biomass")
 
 
 ###################################################
-### code chunk number 13: Fitting a log-series model
+### code chunk number 14: rads-relative-abundances
+###################################################
+plot(moths.rad, prop = TRUE, type="n")
+lines(rad(birds), prop = TRUE, col="red")
+lines(rad(moths), prop = TRUE)
+legend("topright", c("Preston's birds", "Fisher's moths"), col=c("red", "blue"), lty=1, bty="n")
+
+
+###################################################
+### code chunk number 15: Fitting a log-series model
 ###################################################
 (moths.ls <- fitsad(moths,'ls'))
 
 
 ###################################################
-### code chunk number 14: Operations on fitsad object
+### code chunk number 16: Operations on fitsad object
 ###################################################
 summary(moths.ls)
 coef(moths.ls)
@@ -93,7 +112,7 @@ AIC(moths.ls)
 
 
 ###################################################
-### code chunk number 15: Profiling and intervals
+### code chunk number 17: Profiling and intervals
 ###################################################
 moths.ls.prf <- profile(moths.ls)
 likelregions(moths.ls.prf) #likelihood intervals
@@ -101,7 +120,7 @@ confint(moths.ls.prf)
 
 
 ###################################################
-### code chunk number 16: Ploting-profiles
+### code chunk number 18: Ploting-profiles
 ###################################################
 par(mfrow=c(1,2))
 plotprofmle(moths.ls.prf)# log-likelihood profile
@@ -110,7 +129,7 @@ par(mfrow=c(1,1))
 
 
 ###################################################
-### code chunk number 17: Plot-of-predicted-values
+### code chunk number 19: Plot-of-predicted-values
 ###################################################
 par(mfrow=c(2,2))
 plot(moths.ls)
@@ -118,20 +137,20 @@ par(mfrow=c(1,1))
 
 
 ###################################################
-### code chunk number 18: Fitting two other models
+### code chunk number 20: Fitting two other models
 ###################################################
 (moths.pl <- fitsad(x=moths, sad="poilog"))#default is zero-truncated
 (moths.ln <- fitsad(x=moths, sad="lnorm", trunc=0.5)) # lognormal truncated at 0.5
 
 
 ###################################################
-### code chunk number 19: Model selection table
+### code chunk number 21: Model selection table
 ###################################################
 AICtab(moths.ls, moths.pl, moths.ln, base=TRUE)
 
 
 ###################################################
-### code chunk number 20: Predicted values for octaves
+### code chunk number 22: Predicted values for octaves
 ###################################################
 head(moths.ls.oc <- octavpred(moths.ls))
 head(moths.pl.oc <- octavpred(moths.pl))
@@ -139,7 +158,7 @@ head(moths.ln.oc <- octavpred(moths.ln))
 
 
 ###################################################
-### code chunk number 21: Octaves-plot
+### code chunk number 23: Octaves-plot
 ###################################################
 plot(moths.oc)
 lines(moths.ls.oc, col="blue")
@@ -151,7 +170,7 @@ legend("topright",
 
 
 ###################################################
-### code chunk number 22: Predicted values - radplots
+### code chunk number 24: Predicted values - radplots
 ###################################################
 head(moths.ls.rad <- radpred(moths.ls)) 
 head(moths.pl.rad <- radpred(moths.pl))
@@ -159,7 +178,7 @@ head(moths.ln.rad <- radpred(moths.ln))
 
 
 ###################################################
-### code chunk number 23: Rad-plots
+### code chunk number 25: Rad-plots
 ###################################################
 plot(moths.rad)
 lines(moths.ls.rad, col="blue")
@@ -171,7 +190,7 @@ legend("topright",
 
 
 ###################################################
-### code chunk number 24: rsad-example1
+### code chunk number 26: rsad-example1
 ###################################################
 set.seed(42)# fix random seed to make example reproducible
 (samp1 <- rsad(S = 10, frac = 0.1, sad = "lnorm", 
@@ -180,14 +199,14 @@ set.seed(42)# fix random seed to make example reproducible
 
 
 ###################################################
-### code chunk number 25: rsad-example2
+### code chunk number 27: rsad-example2
 ###################################################
 (samp2 <- rsad(S = 100, frac=0.1, sad="lnorm", 
                list(meanlog=5, sdlog=2)))
 
 
 ###################################################
-### code chunk number 26: rsad-poilog-fit
+### code chunk number 28: rsad-poilog-fit
 ###################################################
 (samp2.pl <- fitsad(samp2, "poilog"))
 ## checking correspondence of parameter mu
@@ -195,7 +214,7 @@ coef(samp2.pl)[1] - log(0.1)
 
 
 ###################################################
-### code chunk number 27: rsad-repeated-samples
+### code chunk number 29: rsad-repeated-samples
 ###################################################
 results <- matrix(nrow=75,ncol=2)
 for(i in 1:75){
@@ -208,7 +227,7 @@ results[,1] <- results[,1]-log(0.1)
 
 
 ###################################################
-### code chunk number 28: rsads_bias
+### code chunk number 30: rsads_bias
 ###################################################
 ##Mean of estimates
 apply(results,2,mean)
@@ -217,7 +236,7 @@ apply(results,2,mean)
 
 
 ###################################################
-### code chunk number 29: rsads_bias
+### code chunk number 31: rsads_bias
 ###################################################
 ##Mean of estimates
 apply(results,2,sd)
@@ -226,7 +245,7 @@ apply(results,2,sd)/apply(results,2,mean)
 
 
 ###################################################
-### code chunk number 30: rsads-bias-plots
+### code chunk number 32: rsads-bias-plots
 ###################################################
 par(mfrow=c(1,2))
 plot(density(results[,1]), main=expression(paste("Density of ",mu)))
