@@ -1,5 +1,4 @@
 ### R code from vignette source 'sads_intro.Rnw'
-### Encoding: UTF-8
 
 ###################################################
 ### code chunk number 1: R setup
@@ -190,7 +189,83 @@ legend("topright",
 
 
 ###################################################
-### code chunk number 26: rsad-example1
+### code chunk number 26: grasslands dataset
+###################################################
+head(grasslands)
+
+
+###################################################
+### code chunk number 27: grasslands breakpoints
+###################################################
+(grass.brk <- c(0,1,3,5,seq(15,100, by=10),100) )
+
+
+###################################################
+### code chunk number 28: grasslands histogram
+###################################################
+ grass.h <- hist(grasslands$mids, breaks = grass.brk, plot = FALSE)
+
+
+###################################################
+### code chunk number 29: grasslands histogram data
+###################################################
+ data.frame(midpoint = grass.h$mids, N.spp = grass.h$counts) 
+
+
+###################################################
+### code chunk number 30: grasslands model fit
+###################################################
+grass.e <- fitsadC(grass.h, 'exp') # Exponential
+grass.g <- fitsadC(grass.h, 'gamma') # Pareto
+grass.l <- fitsadC(grass.h, 'lnorm') # Log-normal
+grass.p <- fitsadC(grass.h, 'pareto') # Pareto
+grass.w <- fitsadC(grass.h, 'weibull') # Weibull
+
+
+###################################################
+### code chunk number 31: grasslands model selection
+###################################################
+AICctab(grass.e, grass.g, grass.l,
+        grass.p, grass.w,
+        weights = TRUE, base = TRUE)
+
+
+###################################################
+### code chunk number 32: grasslands_hist_plot
+###################################################
+plot(grass.h, main = "", xlab = "Abundance class")
+
+
+###################################################
+### code chunk number 33: grasslands coverpred
+###################################################
+## Predicted by each model
+grass.e.p <- coverpred(grass.e)
+grass.g.p <- coverpred(grass.g)
+grass.l.p <- coverpred(grass.l)
+grass.p.p <- coverpred(grass.p)
+grass.w.p <- coverpred(grass.w)
+
+
+###################################################
+### code chunk number 34: grasslands_coverpred_plot
+###################################################
+## Plot
+plot(grass.h, main = "", xlab = "Abundance class", xlim = c(0,40))
+## Adds predicted points
+points(grass.e.p, col = 1)
+points(grass.g.p, col = 2)
+points(grass.l.p, col = 3)
+points(grass.p.p, col = 4)
+points(grass.w.p, col = 5)
+legend("topright",
+       legend = c("Exponential", "Gamma", "Log-normal", "Pareto", "Weibull"),
+       col = 1:5, bty = "n", 
+       lty = 1 , pch = 1)
+
+
+###################################################
+### code chunk number 35: rsad-example1
 ###################################################
 set.seed(42)# fix random seed to make example reproducible
 (samp1 <- rsad(S = 10, frac = 0.1, sad = "lnorm", 
@@ -199,14 +274,14 @@ set.seed(42)# fix random seed to make example reproducible
 
 
 ###################################################
-### code chunk number 27: rsad-example2
+### code chunk number 36: rsad-example2
 ###################################################
 (samp2 <- rsad(S = 100, frac=0.1, sad="lnorm", 
                list(meanlog=5, sdlog=2)))
 
 
 ###################################################
-### code chunk number 28: rsad-poilog-fit
+### code chunk number 37: rsad-poilog-fit
 ###################################################
 (samp2.pl <- fitsad(samp2, "poilog"))
 ## checking correspondence of parameter mu
@@ -214,7 +289,7 @@ coef(samp2.pl)[1] - log(0.1)
 
 
 ###################################################
-### code chunk number 29: rsad-repeated-samples
+### code chunk number 38: rsad-repeated-samples
 ###################################################
 results <- matrix(nrow=75,ncol=2)
 for(i in 1:75){
@@ -227,7 +302,7 @@ results[,1] <- results[,1]-log(0.1)
 
 
 ###################################################
-### code chunk number 30: rsads_bias
+### code chunk number 39: rsads_bias
 ###################################################
 ##Mean of estimates
 apply(results,2,mean)
@@ -236,7 +311,7 @@ apply(results,2,mean)
 
 
 ###################################################
-### code chunk number 31: rsads_bias
+### code chunk number 40: rsads_bias
 ###################################################
 ##Mean of estimates
 apply(results,2,sd)
@@ -245,7 +320,7 @@ apply(results,2,sd)/apply(results,2,mean)
 
 
 ###################################################
-### code chunk number 32: rsads-bias-plots
+### code chunk number 41: rsads-bias-plots
 ###################################################
 par(mfrow=c(1,2))
 plot(density(results[,1]), main=expression(paste("Density of ",mu)))

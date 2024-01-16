@@ -19,7 +19,7 @@
 % altered bc \sf is obsolete, see:
 % http://tex.stackexchange.com/questions/74478/latex-command-incantation-for-r 
 \newcommand{\code}[1]{\texttt{#1}}
-\SweaveOpts{eval=TRUE, keep.source=TRUE, echo=TRUE}
+
 %\VignetteIndexEntry{Introduction to sads}
 
 \begin{document}
@@ -33,10 +33,6 @@
 
 \maketitle
 
-@ 
-<<R setup, echo=FALSE, >>=
-options(width=60, continue=" ")
-@ %def 
 
 \section{Introduction}
 
@@ -56,34 +52,39 @@ samples, with and without aggregation of individuals of the same species.
 
 The package is available on CRAN and can be installed in \R with the command:
 
-@ 
-<<installation, eval=FALSE>>=
-install.packages('sads')
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> install.packages('sads')
+\end{Sinput}
+\end{Schunk}
 
 then loaded by
 
-<<load-sads, eval=TRUE>>=
-library(sads)
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> library(sads)
+\end{Sinput}
+\end{Schunk}
 
 \subsection{Developer version}
 \label{sec:developer-version}
 
 The current developer version can be installed from GitHub with:
 
-@
-<<install-dev-version, eval=FALSE >>=
-library(devtools)
-install_github(repo = 'piLaboratory/sads', ref= 'dev', build_vignettes = TRUE)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> library(devtools)
+> install_github(repo = 'piLaboratory/sads', ref= 'dev', build_vignettes = TRUE)
+\end{Sinput}
+\end{Schunk}
 
 And then load the package:
 
-@ 
-<<load-sads-package >>=
-library(sads)
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> library(sads)
+\end{Sinput}
+\end{Schunk}
 
 \section{Exploratory analyses}
 \label{sec:analise-exploratoria}
@@ -92,12 +93,13 @@ Throughout this document we'll use two data sets of abundances from the sads
 package. For more information on these data please refer to their help
 pages: 
 
-@ 
-<<Loading datasets>>=
-data(moths)# William's moth data used by Fisher et al (1943)
-data(ARN82.eB.apr77)# Arntz et al. benthos data
-data(birds)# Bird census used by Preston (1948)
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> data(moths)# William's moth data used by Fisher et al (1943)
+> data(ARN82.eB.apr77)# Arntz et al. benthos data
+> data(birds)# Bird census used by Preston (1948)
+\end{Sinput}
+\end{Schunk}
 
 \subsection{Octaves}
 \label{sec:oitavas}
@@ -106,11 +108,52 @@ Function \code{octav} tabulates the number of species in classes
 of logarithm of abundances at base 2 (Preston's octaves) and returns a data frame 
 \footnote{actually an object of class \emph{octav} which inherits from class \emph{dataframe}}:
 
-@ 
-<<Tabulating species in octaves>>=
-(moths.oc <- octav(moths))
-(arn.oc <- octav(ARN82.eB.apr77))
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> (moths.oc <- octav(moths))
+\end{Sinput}
+\begin{Soutput}
+Object of class "octav"
+   octave upper Freq
+1       0     1   35
+2       1     2   11
+3       2     4   29
+4       3     8   32
+5       4    16   26
+6       5    32   32
+7       6    64   31
+8       7   128   13
+9       8   256   19
+10      9   512    5
+11     10  1024    6
+12     11  2048    0
+13     12  4096    1
+14     13  8192    0
+\end{Soutput}
+\begin{Sinput}
+> (arn.oc <- octav(ARN82.eB.apr77))
+\end{Sinput}
+\begin{Soutput}
+Object of class "octav"
+   octave      upper Freq
+1      -7 7.8125e-03    0
+2      -6 1.5625e-02    3
+3      -5 3.1250e-02    5
+4      -4 6.2500e-02    4
+5      -3 1.2500e-01    6
+6      -2 2.5000e-01    3
+7      -1 5.0000e-01    5
+8       0 1.0000e+00    2
+9       1 2.0000e+00    4
+10      2 4.0000e+00    3
+11      3 8.0000e+00    1
+12      4 1.6000e+01    2
+13      5 3.2000e+01    0
+14      6 6.4000e+01    1
+15      7 1.2800e+02    1
+16      8 2.5600e+02    0
+\end{Soutput}
+\end{Schunk}
 
 A logical argument \code{preston} allows smoothing the numbers as proposed by \citet{Preston1948}. 
 
@@ -121,30 +164,35 @@ A Preston plot is a histogram of this table, obtainable by applying the function
 \setkeys{Gin}{width=0.65\textwidth}
 
 {\centering
-@ 
-<<Ploting-octaves, fig=TRUE, height=5,width=5>>=
-plot(moths.oc)
-@ def 
+\begin{Schunk}
+\begin{Sinput}
+> plot(moths.oc)
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sads_intro-woven-Ploting-octaves}
 }
 
 {\centering
-@ 
-<<Biomass-octave-plot, fig=TRUE, height=5,width=5>>=
-plot(arn.oc)
-@ %def
+\begin{Schunk}
+\begin{Sinput}
+> plot(arn.oc)
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sads_intro-woven-Biomass-octave-plot}
 }
 
 The plot method for objects of class \code{octav} has 
 a logical argument \code{prop} that rescales the y-axis to relative frequencies of species in each octave,
 which can be used to compare different data sets:
 
-@ 
-<<octaves-relative-frequencies>>=
-plot(moths.oc, prop = TRUE, border=NA, col=NA)
-lines(octav(birds), mid = FALSE, prop = TRUE, col="red")
-lines(octav(moths), mid = FALSE, prop = TRUE)
-legend("topright", c("Preston's birds", "Fisher's moths"), col=c("red", "blue"), lty=1, bty="n")
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> plot(moths.oc, prop = TRUE, border=NA, col=NA)
+> lines(octav(birds), mid = FALSE, prop = TRUE, col="red")
+> lines(octav(moths), mid = FALSE, prop = TRUE)
+> legend("topright", c("Preston's birds", "Fisher's moths"), col=c("red", "blue"), lty=1, bty="n")
+\end{Sinput}
+\end{Schunk}
 
 
 \subsection{Rank-abundance plots}
@@ -152,39 +200,65 @@ legend("topright", c("Preston's birds", "Fisher's moths"), col=c("red", "blue"),
 Function \code{rad} returns a data frame of sorted abundances and their ranks 
 \footnote{actually an object of class \emph{rad} which inherits from class \emph{dataframe}}:
 
-@ 
-<<Rank-abundance tables>>=
-head(moths.rad <- rad(moths))
-head(arn.rad <- rad(ARN82.eB.apr77))
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> head(moths.rad <- rad(moths))
+\end{Sinput}
+\begin{Soutput}
+  rank abund
+1    1  2349
+2    2   823
+3    3   743
+4    4   604
+5    5   589
+6    6   572
+\end{Soutput}
+\begin{Sinput}
+> head(arn.rad <- rad(ARN82.eB.apr77))
+\end{Sinput}
+\begin{Soutput}
+     rank abund
+sp17    1 67.21
+sp11    2 54.67
+sp33    3 14.67
+sp9     4  9.90
+sp30    5  5.71
+sp10    6  2.88
+\end{Soutput}
+\end{Schunk}
 
 To get the rank-abundance or Whitaker's plot apply the function \code{plot} on the data frame:
 
 \setkeys{Gin}{width=0.65\textwidth}
 {\centering % centers BOTH of the next plots
-@ 
-<<radplot1, fig=TRUE, height=5, width=5>>=
-plot(moths.rad, ylab="Number of individuals")
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> plot(moths.rad, ylab="Number of individuals")
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sads_intro-woven-radplot1}
 }
 
 {\centering
-@ 
-<<radplots, fig=TRUE, height=5, width=5>>=
-plot(arn.rad, ylab="Biomass")
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> plot(arn.rad, ylab="Biomass")
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sads_intro-woven-radplots}
 }
 
 Again, the plot method for \code{rad}  has a logical argument \code{prop} 
 rescales the y-axis to depict relative abundances:
 
-@ 
-<<rads-relative-abundances>>=
-plot(moths.rad, prop = TRUE, type="n")
-lines(rad(birds), prop = TRUE, col="red")
-lines(rad(moths), prop = TRUE)
-legend("topright", c("Preston's birds", "Fisher's moths"), col=c("red", "blue"), lty=1, bty="n")
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> plot(moths.rad, prop = TRUE, type="n")
+> lines(rad(birds), prop = TRUE, col="red")
+> lines(rad(moths), prop = TRUE)
+> legend("topright", c("Preston's birds", "Fisher's moths"), col=c("red", "blue"), lty=1, bty="n")
+\end{Sinput}
+\end{Schunk}
 
 \section{Model fitting}
 \label{sec:ajuste-e-selecao}
@@ -202,21 +276,96 @@ the \emph{bbmle} package, on top of which the package \emph{sads} is built.
 
 To fit a log-series distribution use the argument \code{sad='ls'}:
 
-@ 
-<<Fitting a log-series model>>=
-(moths.ls <- fitsad(moths,'ls'))
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> (moths.ls <- fitsad(moths,'ls'))
+\end{Sinput}
+\begin{Soutput}
+Maximum likelihood estimation
+Type: discrete  species abundance distribution
+Species: 240 individuals: 15609 
+
+Call:
+mle2(minuslogl = function (N, alpha) 
+-sum(dls(x, N, alpha, log = TRUE)), start = list(alpha = 40.247281791951), 
+    method = "Brent", fixed = list(N = 15609L), data = list(x = list(
+        1, 1, 1, 1, 1, "etc")), lower = 0, upper = 240L)
+
+Coefficients:
+          N       alpha 
+15609.00000    40.24728 
+
+Log-likelihood: -1087.71 
+\end{Soutput}
+\end{Schunk}
 
 The resulting model object inherits from \emph{mle2}
 \citep{Bolkerbbmle}, and has all usual methods for model objects, such as
 summaries, log-likelihood, and AIC values:
-@ 
-<<Operations on fitsad object>>=
-summary(moths.ls)
-coef(moths.ls)
-logLik(moths.ls)
-AIC(moths.ls)
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> summary(moths.ls)
+\end{Sinput}
+\begin{Soutput}
+Maximum likelihood estimation
+
+Call:
+mle2(minuslogl = function (N, alpha) 
+-sum(dls(x, N, alpha, log = TRUE)), start = list(alpha = 40.247281791951), 
+    method = "Brent", fixed = list(N = 15609L), data = list(x = c(1L, 
+    1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+    3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 5L, 
+    5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 6L, 6L, 6L, 6L, 6L, 6L, 
+    6L, 6L, 6L, 6L, 6L, 7L, 7L, 7L, 7L, 7L, 8L, 8L, 8L, 8L, 8L, 
+    8L, 9L, 9L, 9L, 9L, 10L, 10L, 10L, 10L, 11L, 11L, 12L, 12L, 
+    13L, 13L, 13L, 13L, 13L, 14L, 14L, 15L, 15L, 15L, 15L, 16L, 
+    16L, 16L, 17L, 17L, 17L, 18L, 18L, 18L, 19L, 19L, 19L, 20L, 
+    20L, 20L, 20L, 21L, 22L, 22L, 22L, 23L, 23L, 23L, 24L, 25L, 
+    25L, 25L, 26L, 27L, 28L, 28L, 28L, 29L, 29L, 32L, 34L, 34L, 
+    36L, 36L, 36L, 37L, 37L, 43L, 43L, 44L, 44L, 45L, 49L, 49L, 
+    49L, 51L, 51L, 51L, 51L, 52L, 53L, 54L, 54L, 57L, 58L, 58L, 
+    60L, 60L, 60L, 61L, 64L, 67L, 73L, 76L, 76L, 78L, 84L, 89L, 
+    96L, 99L, 109L, 112L, 120L, 122L, 129L, 135L, 141L, 148L, 
+    149L, 151L, 154L, 177L, 181L, 187L, 190L, 199L, 211L, 221L, 
+    226L, 235L, 239L, 244L, 246L, 282L, 305L, 306L, 333L, 464L, 
+    560L, 572L, 589L, 604L, 743L, 823L, 2349L)), lower = 0, upper = 240L)
+
+Coefficients:
+      Estimate Std. Error z value     Pr(z)    
+alpha   40.247      6.961  5.7818 7.391e-09 ***
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Fixed parameters:
+    N 
+15609 
+
+-2 log L: 2175.425 
+\end{Soutput}
+\begin{Sinput}
+> coef(moths.ls)
+\end{Sinput}
+\begin{Soutput}
+          N       alpha 
+15609.00000    40.24728 
+\end{Soutput}
+\begin{Sinput}
+> logLik(moths.ls)
+\end{Sinput}
+\begin{Soutput}
+'log Lik.' -1087.713 (df=1)
+\end{Soutput}
+\begin{Sinput}
+> AIC(moths.ls)
+\end{Sinput}
+\begin{Soutput}
+[1] 2177.425
+\end{Soutput}
+\end{Schunk}
 
 On the above examples, notice that the \code{print} method\footnote{Or, equivalently, the \code{show} method}
 displays some statistics on the input data and 
@@ -234,25 +383,41 @@ To get likelihood profiles, likelihood intervals and confidence intervals use:
 
 \setkeys{Gin}{width=\textwidth}
 
-@ 
-<<Profiling and intervals>>=
-moths.ls.prf <- profile(moths.ls)
-likelregions(moths.ls.prf) #likelihood intervals
-confint(moths.ls.prf)
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> moths.ls.prf <- profile(moths.ls)
+> likelregions(moths.ls.prf) #likelihood intervals
+\end{Sinput}
+\begin{Soutput}
+Likelihood regions for ratio = 2.079442 
+
+ alpha:
+        lower    upper
+[1,] 27.57325 56.04053
+\end{Soutput}
+\begin{Sinput}
+> confint(moths.ls.prf)
+\end{Sinput}
+\begin{Soutput}
+   2.5 %   97.5 % 
+28.01537 55.36267 
+\end{Soutput}
+\end{Schunk}
 
 Then use \code{plotprofmle} to plot likelihood profiles at the original scale (relative negative log-likelihood)
 and function \code{plot} to get plots at chi-square scale (square-root of twice the relative log-likelihood):
 
 \setkeys{Gin}{width=\textwidth}
 
-@ 
-<<Ploting-profiles, fig=TRUE, height=5, width=10>>=
-par(mfrow=c(1,2))
-plotprofmle(moths.ls.prf)# log-likelihood profile
-plot(moths.ls.prf)# z-transformed profile
-par(mfrow=c(1,1))
-@ %def
+\begin{Schunk}
+\begin{Sinput}
+> par(mfrow=c(1,2))
+> plotprofmle(moths.ls.prf)# log-likelihood profile
+> plot(moths.ls.prf)# z-transformed profile
+> par(mfrow=c(1,1))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sads_intro-woven-Ploting-profiles}
 
 \begin{shaded}
   \textbf{Likelihood intervals and confindence intervals:} \hfill
@@ -262,7 +427,7 @@ par(mfrow=c(1,1))
   of function \code{likelregions}. The default value of \code{ratio} is log(8), and thus
   in the example above the likelihood interval encloses all values of the parameter 
   that are up to 8 times as plausible
-  as the estimated value of $\alpha = $ \Sexpr{unname(round(coef(moths.ls)[2],2))}.
+  as the estimated value of $\alpha = $ 40.25.
   
   Likelihood intervals at log(8) converge to the value of confidence intervals at 95\%
   as sample size increases. In most cases even for moderate sample sizes the limits of
@@ -273,12 +438,14 @@ par(mfrow=c(1,1))
 
 
 When applied on a sad model object, the function \code{plot} returns four diagnostic plots:
-@ 
-<<Plot-of-predicted-values, fig=TRUE>>=
-par(mfrow=c(2,2))
-plot(moths.ls)
-par(mfrow=c(1,1))
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> par(mfrow=c(2,2))
+> plot(moths.ls)
+> par(mfrow=c(1,1))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sads_intro-woven-Plot-of-predicted-values}
 
 
 The first two plots (top right and left) are the octave and rank-abundance plots with the predicted values 
@@ -322,18 +489,68 @@ function \code{fitrad}:
 \section{Model selection}
 
 It's possible to fit other models to the same data set, such as the Poisson-lognormal and a truncated lognormal:
-@ 
-<<Fitting two other models>>=
-(moths.pl <- fitsad(x=moths, sad="poilog"))#default is zero-truncated
-(moths.ln <- fitsad(x=moths, sad="lnorm", trunc=0.5)) # lognormal truncated at 0.5
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> (moths.pl <- fitsad(x=moths, sad="poilog"))#default is zero-truncated
+\end{Sinput}
+\begin{Soutput}
+Maximum likelihood estimation
+Type: discrete  species abundance distribution
+Species: 240 individuals: 15609 
+
+Call:
+mle2(minuslogl = function (mu, sig) 
+-sum(dtrunc("poilog", x = x, coef = list(mu = mu, sig = sig), 
+    trunc = trunc, log = TRUE)), start = list(mu = 1.99664912324681, 
+    sig = 2.18726037265132), data = list(x = list(1, 1, 1, 1, 
+    1, "etc")))
+
+Coefficients:
+      mu      sig 
+1.996463 2.187131 
+
+Truncation point: 0 
+
+Log-likelihood: -1086.07 
+\end{Soutput}
+\begin{Sinput}
+> (moths.ln <- fitsad(x=moths, sad="lnorm", trunc=0.5)) # lognormal truncated at 0.5
+\end{Sinput}
+\begin{Soutput}
+Maximum likelihood estimation
+Type: continuous  species abundance distribution
+Species: 240 individuals: 15609 
+
+Call:
+mle2(minuslogl = function (meanlog, sdlog) 
+-sum(dtrunc("lnorm", x, coef = list(meanlog = meanlog, sdlog = sdlog), 
+    trunc = trunc, log = TRUE)), start = list(meanlog = 2.57905878609957, 
+    sdlog = 1.78235276032689), data = list(x = list(1, 1, 1, 
+    1, 1, "etc")))
+
+Coefficients:
+ meanlog    sdlog 
+2.274346 2.039740 
+
+Truncation point: 0.5 
+
+Log-likelihood: -1086.36 
+\end{Soutput}
+\end{Schunk}
 
 moreover, the function \code{AICtab} and friends from the \emph{bbmle} package can be used to get a model selection table:
 
-@ 
-<<Model selection table>>=
-AICtab(moths.ls, moths.pl, moths.ln, base=TRUE)
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> AICtab(moths.ls, moths.pl, moths.ln, base=TRUE)
+\end{Sinput}
+\begin{Soutput}
+         AIC    dAIC   df
+moths.pl 2176.1    0.0 2 
+moths.ln 2176.7    0.6 2 
+moths.ls 2177.4    1.3 1 
+\end{Soutput}
+\end{Schunk}
 
 \textbf{NOTICE} that the information criterion methods do not differentiate between
 \code{fitsad} and \code{fitrad} methods. Because of this, it is possible to include
@@ -342,48 +559,116 @@ but the result will be meaningless.
 
 To compare visually fits first get octave tables:
 
-@ 
-<<Predicted values for octaves>>=
-head(moths.ls.oc <- octavpred(moths.ls))
-head(moths.pl.oc <- octavpred(moths.pl))
-head(moths.ln.oc <- octavpred(moths.ln))
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> head(moths.ls.oc <- octavpred(moths.ls))
+\end{Sinput}
+\begin{Soutput}
+  octave upper     Freq
+1      0     1 40.14377
+2      1     2 20.02026
+3      2     4 23.27123
+4      3     8 25.12674
+5      4    16 25.86285
+6      5    32 25.67116
+\end{Soutput}
+\begin{Sinput}
+> head(moths.pl.oc <- octavpred(moths.pl))
+\end{Sinput}
+\begin{Soutput}
+  octave upper     Freq
+1      0     1 27.58748
+2      1     2 19.48221
+3      2     4 26.76474
+4      3     8 31.88373
+5      4    16 33.16136
+6      5    32 30.49056
+\end{Soutput}
+\begin{Sinput}
+> head(moths.ln.oc <- octavpred(moths.ln))
+\end{Sinput}
+\begin{Soutput}
+  octave upper     Freq
+1      0     1 15.41886
+2      1     2 22.44066
+3      2     4 29.13034
+4      3     8 33.72746
+5      4    16 34.82976
+6      5    32 32.08088
+\end{Soutput}
+\end{Schunk}
 
 then use \code{lines} to superimpose the predicted values on the octave plot:
 
 \setkeys{Gin}{width=0.75\textwidth}
-@ 
-<<Octaves-plot, fig=TRUE>>=
-plot(moths.oc)
-lines(moths.ls.oc, col="blue")
-lines(moths.pl.oc, col="red")
-lines(moths.ln.oc, col="green")
-legend("topright", 
-       c("Logseries", "Poisson-lognormal", "Truncated lognormal"), 
-       lty=1, col=c("blue","red", "green"))
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> plot(moths.oc)
+> lines(moths.ls.oc, col="blue")
+> lines(moths.pl.oc, col="red")
+> lines(moths.ln.oc, col="green")
+> legend("topright", 
+        c("Logseries", "Poisson-lognormal", "Truncated lognormal"), 
+        lty=1, col=c("blue","red", "green"))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sads_intro-woven-Octaves-plot}
 
 To do the same with rank-abundance plots get the rank-abundance objects:
 
-@ 
-<<Predicted values - radplots>>=
-head(moths.ls.rad <- radpred(moths.ls)) 
-head(moths.pl.rad <- radpred(moths.pl))
-head(moths.ln.rad <- radpred(moths.ln))
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> head(moths.ls.rad <- radpred(moths.ls)) 
+\end{Sinput}
+\begin{Soutput}
+  rank abund
+1    1  1180
+2    2   854
+3    3   710
+4    4   619
+5    5   554
+6    6   503
+\end{Soutput}
+\begin{Sinput}
+> head(moths.pl.rad <- radpred(moths.pl))
+\end{Sinput}
+\begin{Soutput}
+  rank abund
+1    1  4348
+2    2  1973
+3    3  1322
+4    4  1001
+5    5   807
+6    6   676
+\end{Soutput}
+\begin{Sinput}
+> head(moths.ln.rad <- radpred(moths.ln))
+\end{Sinput}
+\begin{Soutput}
+  rank     abund
+1    1 3524.2394
+2    2 1674.8603
+3    3 1148.3539
+4    4  883.6309
+5    5  720.7864
+6    6  609.2707
+\end{Soutput}
+\end{Schunk}
 
 then plot observed and predicted values:
 
-@ 
-<<Rad-plots, fig=TRUE>>=
-plot(moths.rad)
-lines(moths.ls.rad, col="blue")
-lines(moths.pl.rad, col="red")
-lines(moths.ln.rad, col="green")
-legend("topright", 
-       c("Logseries", "Poisson-lognormal", "Truncated lognormal"), 
-       lty=1, col=c("blue","red", "green"))
-@ %def 
+\begin{Schunk}
+\begin{Sinput}
+> plot(moths.rad)
+> lines(moths.ls.rad, col="blue")
+> lines(moths.pl.rad, col="red")
+> lines(moths.ln.rad, col="green")
+> legend("topright", 
+        c("Logseries", "Poisson-lognormal", "Truncated lognormal"), 
+        lty=1, col=c("blue","red", "green"))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sads_intro-woven-Rad-plots}
 
 \subsection{Abundance class data}
 
@@ -400,207 +685,6 @@ class of each plant species in plots set in grasslands in
 Southern Brazil. The object \code{grasslands} has the data from plot
 'CA8', which has the largest number of species recorded in this study.
 
-@ 
-<<grasslands dataset>>=
-head(grasslands)
-@ %def
-
-The vector \code{cover} in this data frame has the cover class for
-each plant species, that is, the the proportion of the area of the
-plot covered by all individuals of each species. Coverage is expressed
-in a scale with 13 intervals, as defined by the breakpoints below:
-
-@ 
-<<grasslands breakpoints>>=
-(grass.brk <- c(0,1,3,5,seq(15,100, by=10),100) )
-@ %def
-
-We can tally the number of species in each cover class using a histogram:
-
-@ 
-<<grasslands histogram>>=
- grass.h <- hist(grasslands$mids, breaks = grass.brk, plot = FALSE)
-@ %def
-
-The resulting object of the class \code{histogram} has the number of
-species in each cover class, as well as the classes midpoints:
-
-@
-<<grasslands histogram data>>=
- data.frame(midpoint = grass.h$mids, N.spp = grass.h$counts) 
-@ %def
-
-
-The function \code{fitsadC} fits continuous distributions usually
-applied to describe this kind of data. The commands below fit all
-models currently available for abundance class data in the package
-\code{sads}. Note that the data is provided to this function through an object
-of the class \code{histogram}:
-
-@
-<<grasslands model fit >>=
-grass.e <- fitsadC(grass.h, 'exp') # Exponential
-grass.g <- fitsadC(grass.h, 'gamma') # Pareto
-grass.l <- fitsadC(grass.h, 'lnorm') # Log-normal
-grass.p <- fitsadC(grass.h, 'pareto') # Pareto
-grass.w <- fitsadC(grass.h, 'weibull') # Weibull
-@ %def
-
-The fitted models are of class \code{fitsadC}, for which most of the
-methods for diagnostics and model comparison showed in the previous sections are
-available. For instance, the fitted models can be compared in the
-usual way:
-
-@
-<<grasslands model selection >>=
-AICctab(grass.e, grass.g, grass.l,
-        grass.p, grass.w,
-        weights = TRUE, base = TRUE)
-@ %def
-
-A histogram with observed values can ploted simply with
-
-@
-<<grasslands_hist_plot, fig = TRUE >>=
-plot(grass.h, main = "", xlab = "Abundance class")
-@ %def
-
-By default, R plots histograms with classes of unequal size using a
-density scale. The function \code{coverpred} provides the number of
-species expected by a fiited model, in frequency, relative frequency
-and density scales.
-
-@
-<<grasslands coverpred >>=
-## Predicted by each model
-grass.e.p <- coverpred(grass.e)
-grass.g.p <- coverpred(grass.g)
-grass.l.p <- coverpred(grass.l)
-grass.p.p <- coverpred(grass.p)
-grass.w.p <- coverpred(grass.w)
-@ %def
-
-We can then use this object to add the densities
-values predicted by each model:
-
-@
-<<grasslands_coverpred_plot, fig = TRUE>>=
-## Plot
-plot(grass.h, main = "", xlab = "Abundance class", xlim = c(0,40))
-## Adds predicted points
-points(grass.e.p, col = 1)
-points(grass.g.p, col = 2)
-points(grass.l.p, col = 3)
-points(grass.p.p, col = 4)
-points(grass.w.p, col = 5)
-legend("topright",
-       legend = c("Exponential", "Gamma", "Log-normal", "Pareto", "Weibull"),
-       col = 1:5, bty = "n", 
-       lty = 1 , pch = 1)
-@ %def
-
-Please refer to the man pages of \code{fitsadC} and
-\code{fitsaC-class} for further methods and usage.
-
-\section{Simulations}
-
-The function \code{rsad} returns random samples of a community with $S$ species. The mean abundances of the species in the communities
-are independent identically distributed (\emph{iid}) variables that
-follow a given probability distribution. The sample simulates a given
-number of draws of a fraction $a$ from the total number of individuals in
-the community. For instance, to simulate two Poisson samples of 10\%
-of a community with 10 species that follows a lognormal distribution
-with parameters $\mu=3$ and $\sigma=1.5$ use:
-
-@ 
-<<rsad-example1>>=
-set.seed(42)# fix random seed to make example reproducible
-(samp1 <- rsad(S = 10, frac = 0.1, sad = "lnorm", 
-               coef=list(meanlog = 3, sdlog = 1.5),
-               zeroes=TRUE, ssize = 2))
-@ 
-
-The function returns a data frame with a sample numeric label,
-species' numeric label and species' abundance in each sample. By
-default, \code{rsad} returns a vector of abundances of single Poisson
-sample with zeroes omitted:
-
-@ 
-<<rsad-example2>>=
-(samp2 <- rsad(S = 100, frac=0.1, sad="lnorm", 
-               list(meanlog=5, sdlog=2)))
-@ 
-
-Since this is a Poisson sample of a lognormal community, the abundances
-in the sample should follow a Poisson-lognormal distribution with
-parameters $\mu + \log a $ and $\sigma$
-\citep{grotan2008}. We can check this by fitting a Poisson-lognormal
-model to the sample:
-
-@ 
-<<rsad-poilog-fit>>=
-(samp2.pl <- fitsad(samp2, "poilog"))
-## checking correspondence of parameter mu
-coef(samp2.pl)[1] - log(0.1)
-@ %def 
-
-Not bad. By repeating the sampling and the fit many times it's possible to
-evaluate the bias and variance of the maximum likelihood estimates:
-
-\setkeys{Gin}{width=\textwidth}
-@ 
-<<rsad-repeated-samples>>=
-results <- matrix(nrow=75,ncol=2)
-for(i in 1:75){
-    x <- rsad(S = 100, frac=0.1, sad="lnorm", 
-              list(meanlog=5, sdlog=2))
-    y <- fitsad(x, "poilog")
-    results[i,] <- coef(y)
-}
-results[,1] <- results[,1]-log(0.1)
-@ 
-
-Bias is estimated as the difference between the mean of estimates and
-the value of parameters:
-
-@ 
-<<rsads_bias>>=
-##Mean of estimates
-apply(results,2,mean)
-## relative bias
-(c(5,2)-apply(results,2,mean))/c(5,2)
-@ %def 
-
-And the precision of the estimates are their standard deviations
-
-@ 
-<<rsads_bias>>=
-##Mean of estimates
-apply(results,2,sd)
-## relative precision
-apply(results,2,sd)/apply(results,2,mean)
-@ 
-
-Finally, a density plot with lines indicating the mean of estimates and the values of parameters:
-@ 
-<<rsads-bias-plots, fig=TRUE, height=5, width=10>>=
-par(mfrow=c(1,2))
-plot(density(results[,1]), main=expression(paste("Density of ",mu)))
-abline(v=c(mean(results[,1]),5), col=2:3)
-plot(density(results[,2]), main=expression(paste("Density of ",sigma)))
-abline(v=c(mean(results[,2]), 2), col=2:3)
-par(mfrow=c(1,1))
-@ %def 
-
-Increasing the number of simulations improves these estimators.
-
-\section{Bugs and issues}
-\label{sec:bugs-issues}
-
-The package project is hosted on GitHub (\url{https://github.com/piLaboratory/sads/}). 
-Please report bugs and issues and give us your feedback at 
-\url{https://github.com/piLaboratory/sads/issues}.
-
-\bibliographystyle{ecology}
-\bibliography{sads_intro}
-\end{document}
+\begin{Schunk}
+\begin{Sinput}
+> head(grasslands)
